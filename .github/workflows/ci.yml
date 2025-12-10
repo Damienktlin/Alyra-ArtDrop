@@ -13,10 +13,10 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
             
-            - name: Use Node.js 20.20.0
+            - name: Use Node.js 20.11.1
               uses: actions/setup-node@v3
               with:
-                  node-version: 20.20.0
+                  node-version: 20.11.1
 
             - name: Cache node modules
               id: cache-node-modules
