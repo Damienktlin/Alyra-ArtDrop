@@ -16,18 +16,24 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: 20.x
+                node-version: '20.x'
 
-            - name: Cache node modules
+            - name: Cache backend node modules
               uses: actions/cache@v3
               with:
-                path: node_modules
-                key: ${{ runner.os }}-node_modules-${{ hashFiles('./backend/package-lock.json') }}
+                path: backend/node_modules
+                key: ${{ runner.os }}-backend-node_modules-${{ hashFiles('backend/package-lock.json') }}
                 restore-keys: |
-                  ${{ runner.os }}-node_modules-
-            
+                  ${{ runner.os }}-backend-node_modules-
+
+            - name: Show Node & npm versions (debug)
+              run: |
+                node --version
+                npm --version
+              working-directory: ./backend
+
             - name: Install dependencies
-              run: npm install
+              run: npm ci
               working-directory: ./backend
             
             - name: Run tests
