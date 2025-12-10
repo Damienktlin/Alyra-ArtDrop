@@ -13,9 +13,6 @@ contract TokenArt is ERC20, Ownable {
     //Pas de mint initial, le mint se fait par le contrat parent vers le contributeur à la valeur de l'investissement * rate
     constructor(string memory _name, string memory _symbol, uint256 _initialSupply, uint _rate, address _artistAddr
         ) ERC20(_name, _symbol) Ownable(msg.sender) {
-            //_mint(msg.sender, _initialSupply);
-            //transferOwnership(msg.sender);
-            //mint un certain pourcentage (ex : 10-51%) à l'artiste? et redistribuer le reste aux contributeurs?
             rate = _rate;
             artistAddress = _artistAddr;
             initialSupply = _initialSupply;
@@ -26,14 +23,9 @@ contract TokenArt is ERC20, Ownable {
     }
 
     function mintTokens(address _to, uint256 _invest) external onlyOwner {
-        require(totalSupply() + (_invest * rate / 100) < initialSupply, "Exceeds initial supply");
+        require(totalSupply() + (_invest * rate / 100) <= initialSupply, "Exceeds initial supply");
         uint256 tokensToMint = _invest * rate / 100;
         _mint(_to, tokensToMint);
     }
-
-//function de transfert de la propriété du contrat TokenArt à l'artiste une fois la campagne terminée avec succès
-    //function transferOwnershipToArtist() external onlyOwner {
-        //transferOwnership(artistAddress);
-    //}
 
 }

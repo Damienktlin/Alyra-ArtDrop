@@ -6,9 +6,8 @@ import { useAccount } from 'wagmi'
 export default function Home() {
   const { isConnected } = useAccount();
   return (
-    <div>
+    <div className="min-h-screen">
       {isConnected ? <Main /> : <NotConnected />}
-      
     </div>
- );
+  );
 }

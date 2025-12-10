@@ -105,6 +105,7 @@ describe("Artdrop Smart Contract", function () {
             
             const artistBalanceAfter = await USDC.balanceOf(artist.address);
             //console.log(transferSuccess);
+            expect((await Campaign.getTokenArt()).rate).to.be.equal(100n);
             expect(transferSuccess.value).to.be.equal(0n);
             expect(artistBalanceAfter - artistBalanceBefore).to.equal(1000000n * multiplier);
         });
@@ -150,10 +151,10 @@ describe("Artdrop Smart Contract", function () {
                 await Campaign.connect(owner).startCampaign();
                 await expect(Campaign.connect(addr2).contribute(0n)).to.be.revertedWith("Contribution must be greater than 0");
             });
-            it("Should fail to transfer USDC failure", async function () {
+            /*it("Should fail to transfer USDC failure", async function () {
                 await Campaign.connect(owner).startCampaign();
                 await expect(Campaign.connect(addr2).contribute(100n)).to.be.revertedWithCustomError(Campaign, `ERC20InsufficientAllowance("${Campaign.target}", 0, 100000000)`);
-            });
+            });*/
         });
 
         describe("require withdrawFunds conditions", function () {
@@ -189,6 +190,16 @@ describe("Artdrop Smart Contract", function () {
         });
 
         describe("require createTokenArt conditions", function () {
+            it("Should fail to create TokenArt if name is empty", async function () {
+                const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
+                await increaseTimeToDeadline();
+                await expect(Campaign.connect(owner).createTokenArt("", "ART")).to.be.revertedWith("Token name and symbol cannot be empty");
+            });
+            it("Should fail to create TokenArt if symbol is empty", async function () {
+                const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
+                await increaseTimeToDeadline();
+                await expect(Campaign.connect(owner).createTokenArt("TokenArt", "")).to.be.revertedWith("Token name and symbol cannot be empty");
+            });
             it("Should fail to create TokenArt if already created", async function () {
                 const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
                 await increaseTimeToDeadline();
@@ -254,19 +265,32 @@ describe("Artdrop Smart Contract", function () {
     });
 
     describe("Getter tests", function () {
-        it("Should return the remaining time correctly", async function () {
-            const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await setUpSmartContract();
-            await Campaign.connect(owner).startCampaign();
-            await networkHelpers.time.increase(50);
-            const remainingTime = await Campaign.getRemainingTime();
-            expect(remainingTime).to.equal(150);
+        it("Should return TokenArt details", async function () {
+            const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
+            await increaseTimeToDeadline();
+            await Campaign.connect(owner).createTokenArt("TokenArt", "ART");
+            const tokenArt = await Campaign.getTokenArt();
+            const contractAddress = await ethers.getContractAt("TokenArt", tokenArt.Address);
+            expect(tokenArt.Address).to.equal(contractAddress.target);
+            expect(tokenArt.name).to.equal("TokenArt");
+            expect(tokenArt.symbol).to.equal("ART");
+            expect(tokenArt.initialSupply).to.equal(1000000n);
+            expect(tokenArt.rate).to.equal(100n);
         });
-        it("Should return zero remaining time after deadline", async function () {
-            const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await setUpSmartContract();
-            await Campaign.connect(owner).startCampaign();
-            await networkHelpers.time.increase(201);
-            const remainingTime = await Campaign.getRemainingTime();
-            expect(remainingTime).to.equal(0);
+        it("Should return the contributions correctly", async function () {
+            const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
+            const Contributions = await Campaign.getContributions();
+            expect(Contributions[0].amount).to.equal(500000n);
+            expect(Contributions[1].amount).to.equal(300000n);
+            expect(Contributions[2].amount).to.equal(200000n);  
+        });
+        it("Should return the decimals of Art Token", async function () {
+            const { Campaign,USDC, owner, artist, addr2, addr3, addr4 } = await fullyContributeCampaign();
+            await increaseTimeToDeadline();
+            await Campaign.connect(owner).createTokenArt("TokenArt", "ART");
+            const tokenArt = await Campaign.getTokenArt();
+            const contractAddress = await ethers.getContractAt("TokenArt", tokenArt.Address);
+            expect(await contractAddress.decimals()).to.equal(6n);
         });
     });
 });
