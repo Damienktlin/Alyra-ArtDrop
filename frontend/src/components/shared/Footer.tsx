@@ -1,7 +1,7 @@
 const Footer = () => {
   return (
     <footer className="footer">
-        All rights reseved &copy; Alyra {new Date().getFullYear()}
+        All rights reseved &copy; ArtDrop {new Date().getFullYear()}
     </footer>
   )
 }

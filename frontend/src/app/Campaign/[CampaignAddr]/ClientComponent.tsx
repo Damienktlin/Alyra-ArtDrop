@@ -63,7 +63,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
         const logs = await publicClient.getLogs({
             address: campaignAddress,
             event: parseAbiItem('event ContributionDone(address contributor, uint256 amount)'),
-            fromBlock: 0n,
+            fromBlock: 9815965n,
             toBlock: 'latest',
         });
         const parsedLogs = (await logs).map(log => ({
@@ -403,7 +403,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="space-y-1">
                                         <p className="text-sm text-muted-foreground">Start Time</p>
-                                        <p className="font-mono text-sm">{new Date(Number(campaignDetails?.startTime) * 1000).toLocaleString()}</p>
+                                        <p className="font-mono text-sm">{campaignDetails?.startTime ? new Date(Number(campaignDetails?.startTime) * 1000).toLocaleString() : "Not Started yet"}</p>
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-sm text-muted-foreground">Deadline</p>
@@ -515,7 +515,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                             <CardAction className="grid grid-cols-2 gap-3 p-6 pt-0">
                                     <Input className="border-2 border-green-500/30" placeholder="Token Name" onChange={(e)=> setTokenArt({...tokenArt, name: e.target.value})}/>
                                     <Input className="border-2 border-green-500/30" placeholder="Symbol" onChange={(e)=> setTokenArt({...tokenArt, symbol: e.target.value})}/>
-                                    <Button className="bg-green-600 hover:bg-green-700" onClick={()=> createToken()} disabled={tokenArt.Address !== undefined || isLoadingCreateToken}>
+                                    <Button className="bg-green-600 hover:bg-green-700" onClick={()=> createToken()} disabled={tokenArt.Address !== '0x0000000000000000000000000000000000000000' || isLoadingCreateToken}>
                                         {isLoadingCreateToken ? 'Creating...' : '1 - Create Token'}
                                     </Button>
                                     <Button className="bg-green-600 hover:bg-green-700" onClick={()=> distributeToken() } disabled={tokenArt.Address === '0x0000000000000000000000000000000000000000' || tokenArt.Address === undefined || isLoadingDistributeToken}>

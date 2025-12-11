@@ -4,7 +4,7 @@ pragma solidity ^0.8.28;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import './Campaign.sol';
 
-contract ArtdropV2 is Ownable {
+contract Artdrop is Ownable {
     address public usdc;
     uint32 public campaignCount;
     uint32 multiplier = 10 ** 6; // USDC a 6 décimales

@@ -60,7 +60,7 @@ const page = () => {
         const eventLog = publicClient.getLogs({
             address: contractAddress,
             event: parseAbiItem('event CampaignCreated(uint32 campaignId, string name, address campaignAddress)'),
-            fromBlock: 0n,
+            fromBlock: 9815965n,
             toBlock: 'latest',
         });
         const formattedEvents = (await eventLog).map(log => ({
@@ -75,7 +75,6 @@ const page = () => {
         if (error) {
             toast.error(`Transaction failed: ${error.message}`);
         } else if (isConfirmed) {
-            console.log("Campaign created");
             toast.success('Campaign created successfully!');
             getEvents();
         }

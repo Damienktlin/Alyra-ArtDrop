@@ -52,7 +52,7 @@ const Main = () => {
           const eventLog = publicClient.getLogs({
               address: contractAddress,
               event: parseAbiItem('event CampaignCreated(uint32 campaignId, string name, address campaignAddress)'),
-              fromBlock: 0n,
+              fromBlock: 9815965n,
               toBlock: 'latest',
           });
           const formattedEvents = (await eventLog).map(log => ({
@@ -78,7 +78,19 @@ const Main = () => {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div className="text-center py-12 px-4">
+        <h1 className="text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient">
+          ArtDrop
+        </h1>
+        <p className="text-xl md:text-2xl text-muted-foreground mb-2">
+          Fund Creative Projects with <span className="text-accent font-semibold">Web3</span>
+        </p>
+        <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+          Support artists and creators through decentralized crowdfunding. Contribute with USDC and earn exclusive art tokens as rewards and more.
+        </p>
+      </div>
+
       <div>
         <Card className="border-1 border-primary/20 shadow-lg">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10">
@@ -121,6 +133,7 @@ const Main = () => {
           </Card>
         )}
       </div>
+
       <div className="mt-8">
         <Card className="border-2 border-primary/20 shadow-xl">
           <CardHeader className="bg-gradient-to-r from-primary/10 to-accent/10">

@@ -1,4 +1,4 @@
-export const contractAddress = "0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E";
+export const contractAddress = "0x5892d94eA5ed3bc3460C02f861966605607b991F";
 export const contractAbiArtdrop = [
     {
       "inputs": [
@@ -1067,7 +1067,7 @@ export const contractAbiCampaign =  [
 		"type": "function"
 	}
 ];
-export const usdcAddress = "0x67d269191c92Caf3cD7723F116c85e6E9bf55933";
+export const usdcAddress = "0x0cb3B91C26A7D589D7218E5a8cD61c6Aa5338A30";
 export const usdcAbi = [
     {
       "inputs": [],
