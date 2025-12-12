@@ -16,6 +16,8 @@ const nextConfig: NextConfig = {
     return config;
   },
   serverExternalPackages: ['pino', 'pino-pretty'],
+  // Turbopack config vide pour permettre l'utilisation de webpack
+  turbopack: {},
 };
 
 export default nextConfig;
