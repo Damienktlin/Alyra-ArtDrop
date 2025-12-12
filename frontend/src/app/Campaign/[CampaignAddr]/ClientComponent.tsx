@@ -490,7 +490,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                                     </div>
                                     <div className="flex flex-col gap-3">
                                         <Input className="border-1 border-accent/30 focus:border-accent" placeholder={`Custom amount: ${amount || 0} USDC`}  onChange={(e) => setAmount(Number(e.target.value) || 0)} />
-                                        <Button className="w-full bg-accent hover:bg-accent/90 text-lg py-6" disabled={isLoadingContribute} onClick={()=> contribute()}>
+                                        <Button className="w-full bg-accent hover:bg-accent/90 text-lg py-6" disabled={isLoadingContribute || timestamp > Number(campaignDetails?.startTime) + Number(campaignDetails?.deadline) } onClick={()=> contribute()}>
                                             {isLoadingContribute ? 'Processing...' : `Contribute ${amount || 0} USDC`}
                                         </Button>
                                     </div>
