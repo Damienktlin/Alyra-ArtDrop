@@ -49,11 +49,12 @@ const Main = () => {
   }
 
   const getEvents = async () => {
+          const currentBlock = await publicClient.getBlockNumber();
           const eventLog = publicClient.getLogs({
               address: contractAddress,
               event: parseAbiItem('event CampaignCreated(uint32 campaignId, string name, address campaignAddress)'),
-              fromBlock: 9815965n,
-              toBlock: 'latest',
+              fromBlock: currentBlock - 999n,
+              toBlock: currentBlock,
           });
           const formattedEvents = (await eventLog).map(log => ({
               id: log.args.campaignId,

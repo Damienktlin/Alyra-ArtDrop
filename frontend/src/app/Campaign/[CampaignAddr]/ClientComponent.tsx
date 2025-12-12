@@ -60,11 +60,12 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
     });
 
     const fetchEvents = async () => {
+        const currentBlock = await publicClient.getBlockNumber();
         const logs = await publicClient.getLogs({
             address: campaignAddress,
             event: parseAbiItem('event ContributionDone(address contributor, uint256 amount)'),
-            fromBlock: 9815965n,
-            toBlock: 'latest',
+            fromBlock: currentBlock - 999n,
+            toBlock: currentBlock,
         });
         const parsedLogs = (await logs).map(log => ({
             contributor: log.args.contributor,
@@ -177,7 +178,6 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
     }, []);
 
     useEffect(() => {
-        console.log("Token Art Data:", tokenArtData);
         if(tokenArtData){
             const data = tokenArtData as TokenArt;
             setTokenArt({
@@ -407,7 +407,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-sm text-muted-foreground">Deadline</p>
-                                        <p className="font-mono text-sm">{new Date((timestamp + Number(campaignDetails?.deadline)) * 1000).toLocaleString()}</p>
+                                        <p className="font-mono text-sm">{campaignDetails?.deadline ? new Date((timestamp + Number(campaignDetails.deadline)) * 1000).toLocaleString() : "N/A"}</p>
                                     </div>
                                 </div>
                                 <div className="space-y-1">
@@ -469,7 +469,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                                 <div className="flex items-center justify-between p-4 bg-secondary/30 rounded-lg">
                                     <div>
                                         <p className="text-sm text-muted-foreground mb-1">⏰ Time Remaining</p>
-                                        <p className="text-2xl font-bold text-primary">{campaignDetails?.startTime ? Math.max(0, Math.trunc((((Number(campaignDetails.startTime) + Number(campaignDetails.deadline)) - timestamp))/(36*24)))/100 : 0}</p>
+                                        <p className="text-2xl font-bold text-primary">{(campaignDetails?.startTime && campaignDetails?.deadline) ? Math.max(0, Math.trunc((((Number(campaignDetails.startTime) + Number(campaignDetails.deadline)) - timestamp))/(36*24)))/100 : 0}</p>
                                         <p className="text-sm text-muted-foreground">days</p>
                                     </div>
                                 </div>
@@ -489,9 +489,9 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                                         <Button className="border-1 border-accent/30 hover:border-accent hover:bg-accent/10" variant="outline" onClick={()=> setAmount(500)}>500 USDC</Button>
                                     </div>
                                     <div className="flex flex-col gap-3">
-                                        <Input className="border-1 border-accent/30 focus:border-accent" placeholder={`Custom amount: ${amount} USDC`}  onChange={(e) => setAmount(Number(e.target.value))} />
+                                        <Input className="border-1 border-accent/30 focus:border-accent" placeholder={`Custom amount: ${amount || 0} USDC`}  onChange={(e) => setAmount(Number(e.target.value) || 0)} />
                                         <Button className="w-full bg-accent hover:bg-accent/90 text-lg py-6" disabled={isLoadingContribute} onClick={()=> contribute()}>
-                                            {isLoadingContribute ? 'Processing...' : `Contribute ${amount} USDC`}
+                                            {isLoadingContribute ? 'Processing...' : `Contribute ${amount || 0} USDC`}
                                         </Button>
                                     </div>
                                 </CardAction>
@@ -515,7 +515,7 @@ const ClientComponent =   (props: { campaignAddress: `0x${string}` }) => {
                             <CardAction className="grid grid-cols-2 gap-3 p-6 pt-0">
                                     <Input className="border-2 border-green-500/30" placeholder="Token Name" onChange={(e)=> setTokenArt({...tokenArt, name: e.target.value})}/>
                                     <Input className="border-2 border-green-500/30" placeholder="Symbol" onChange={(e)=> setTokenArt({...tokenArt, symbol: e.target.value})}/>
-                                    <Button className="bg-green-600 hover:bg-green-700" onClick={()=> createToken()} disabled={tokenArt.Address !== '0x0000000000000000000000000000000000000000' || isLoadingCreateToken}>
+                                    <Button className="bg-green-600 hover:bg-green-700" onClick={()=> createToken()} disabled={(tokenArt.Address !== '0x0000000000000000000000000000000000000000' && tokenArt.Address !== undefined) || isLoadingCreateToken}>
                                         {isLoadingCreateToken ? 'Creating...' : '1 - Create Token'}
                                     </Button>
                                     <Button className="bg-green-600 hover:bg-green-700" onClick={()=> distributeToken() } disabled={tokenArt.Address === '0x0000000000000000000000000000000000000000' || tokenArt.Address === undefined || isLoadingDistributeToken}>

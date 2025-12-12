@@ -17,7 +17,7 @@ import {
 const config = getDefaultConfig({
     appName: 'My RainbowKit App',
     projectId: '35314f6f86d6888c2f3ee38a1dd938a4',
-    chains: [hardhat, sepolia],
+    chains: [sepolia],
     ssr: true, 
 });
 
