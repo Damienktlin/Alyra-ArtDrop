@@ -88,7 +88,7 @@ contract Campaign is Ownable {
     function contribute(uint256 _amount) external {
         require(campaignDetails.startTime > 0, "Campaign has not started yet");
         require(block.timestamp <= campaignDetails.startTime + campaignDetails.deadline, "Campaign deadline has passed");
-        require(_amount > 0, "Contribution must be greater than 0");
+        require(_amount >= 10, "Contribution must be greater than 10");
         require(usdc.transferFrom(msg.sender, address(this), _amount * multiplier), "USDC transfer failed");
         campaignDetails.fundsRaised += _amount;
         contributions.push(Contribution({

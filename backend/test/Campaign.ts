@@ -149,7 +149,7 @@ describe("Artdrop Smart Contract", function () {
             });
             it("Should fail to contribute zero amount", async function () {
                 await Campaign.connect(owner).startCampaign();
-                await expect(Campaign.connect(addr2).contribute(0n)).to.be.revertedWith("Contribution must be greater than 0");
+                await expect(Campaign.connect(addr2).contribute(0n)).to.be.revertedWith("Contribution must be greater than 10");
             });
             /*it("Should fail to transfer USDC failure", async function () {
                 await Campaign.connect(owner).startCampaign();
